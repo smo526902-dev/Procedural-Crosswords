@@ -1,0 +1,145 @@
+:root {
+  --bg: #f6f4ef;
+  --panel: #ffffff;
+  --ink: #1b1b1f;
+  --muted: #6b6b73;
+  --line: #1b1b1f;
+  --block: #1b1b1f;
+  --cell: #ffffff;
+  --word: #cfe3ff;
+  --cursor: #ffd84d;
+  --wrong: #d23c3c;
+  --revealed: #2f6fd6;
+  --accent: #2357b8;
+  --accent-ink: #ffffff;
+  --border: #dcd8cf;
+  --cell-size: 36px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15161a; --panel: #1f2026; --ink: #ecebe8; --muted: #9a9aa3; --line: #0b0b0d;
+    --block: #0b0b0d; --cell: #2a2b33; --word: #2f4a73; --cursor: #a8861c; --wrong: #ff7272;
+    --revealed: #7fb0ff; --accent: #5b8cff; --accent-ink: #0b0b0d; --border: #34353d;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15161a; --panel: #1f2026; --ink: #ecebe8; --muted: #9a9aa3; --line: #0b0b0d;
+  --block: #0b0b0d; --cell: #2a2b33; --word: #2f4a73; --cursor: #a8861c; --wrong: #ff7272;
+  --revealed: #7fb0ff; --accent: #5b8cff; --accent-ink: #0b0b0d; --border: #34353d;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+button, select, input { font: inherit; color: inherit; }
+button {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 12px; cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.quiet { color: var(--muted); }
+select, input[type=number] {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px;
+}
+
+.top {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px;
+  padding: 14px 20px; border-bottom: 1px solid var(--border); background: var(--panel);
+}
+.top h1 { font-size: 19px; margin: 0; font-family: Georgia, serif; letter-spacing: .2px; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.level { display: flex; align-items: center; gap: 8px; }
+.level output { min-width: 60px; font-weight: 600; }
+details summary { cursor: pointer; color: var(--muted); }
+details[open] summary { margin-bottom: 8px; }
+.adv-grid { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-end; }
+.adv-grid > label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--muted); }
+fieldset { border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px 8px; font-size: 13px; }
+fieldset label { margin-right: 10px; white-space: nowrap; }
+legend { color: var(--muted); }
+
+.app {
+  display: grid; grid-template-columns: auto minmax(260px, 1fr); gap: 28px;
+  padding: 20px; max-width: 1200px; margin: 0 auto; align-items: start;
+}
+.app[hidden] { display: none; }
+.board { display: flex; flex-direction: column; gap: 10px; width: min-content; min-width: min(100%, 360px); }
+.clue-bar {
+  background: var(--word); border-radius: 6px; padding: 8px 12px; min-height: 40px;
+  display: flex; gap: 10px; align-items: baseline;
+}
+#cur-label { font-weight: 700; white-space: nowrap; }
+
+.grid-wrap { position: relative; }
+.grid {
+  display: grid; border: 2px solid var(--line); width: max-content; background: var(--line);
+  gap: 1px; user-select: none; touch-action: manipulation;
+}
+.cell {
+  width: var(--cell-size); height: var(--cell-size); background: var(--cell); position: relative;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  font-size: calc(var(--cell-size) * .58); font-weight: 600; text-transform: uppercase;
+}
+.cell.block { background: var(--block); cursor: default; }
+.cell.in-word { background: var(--word); }
+.cell.cursor { background: var(--cursor); }
+.cell .num {
+  position: absolute; top: 1px; left: 2px; font-size: calc(var(--cell-size) * .27);
+  font-weight: 500; line-height: 1;
+}
+.cell.wrong .ltr { color: var(--wrong); }
+.cell.wrong::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top right, transparent 47%, var(--wrong) 48%, var(--wrong) 52%, transparent 53%);
+  opacity: .55;
+}
+.cell.revealed .ltr { color: var(--revealed); }
+.cell.given .ltr { color: var(--muted); }
+.cell.correct .ltr { color: var(--revealed); }
+.hidden-input { position: absolute; opacity: 0; width: 1px; height: 1px; top: 0; left: 0; border: 0; padding: 0; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.menu { display: contents; }
+.menu[hidden] { display: none; }
+.timer { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 52px; }
+.meta { color: var(--muted); font-size: 13px; }
+.links { display: flex; gap: 16px; font-size: 13px; }
+.links a { color: var(--accent); }
+
+.clues { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-height: calc(100vh - 140px); }
+.clues > div { overflow-y: auto; max-height: calc(100vh - 140px); }
+.clues h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px; color: var(--muted); }
+.clues ol { list-style: none; margin: 0; padding: 0; }
+.clues li {
+  display: flex; gap: 8px; padding: 5px 8px; border-radius: 5px; cursor: pointer;
+  border-left: 3px solid transparent;
+}
+.clues li b { min-width: 22px; text-align: right; }
+.clues li span { min-width: 0; overflow-wrap: anywhere; }
+.clues li.active { background: var(--word); }
+.clues li.cross { border-left-color: var(--accent); }
+.clues li.filled { color: var(--muted); }
+
+.status { text-align: center; padding: 40px 20px; color: var(--muted); }
+.status:empty { display: none; }
+.status.error { color: var(--wrong); }
+
+dialog {
+  border: 1px solid var(--border); border-radius: 10px; background: var(--panel); color: var(--ink);
+  padding: 20px 28px; text-align: center;
+}
+dialog::backdrop { background: rgb(0 0 0 / .35); }
+
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; padding: 12px 16px; }
+  .board { width: auto; }
+  .clues { max-height: none; }
+  .clues > div { max-height: none; }
+  .top { padding: 12px 16px; }
+}
+@media (max-width: 520px) {
+  .clues { grid-template-columns: 1fr; }
+}

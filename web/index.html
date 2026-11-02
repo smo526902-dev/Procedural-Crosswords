@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Procedural Crosswords</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>Procedural Crosswords</h1>
+  <form id="controls" class="controls" autocomplete="off">
+    <label class="level">
+      <span>Difficulty</span>
+      <input id="level" type="range" min="1" max="5" step="1" value="3">
+      <output id="level-name">Medium</output>
+    </label>
+    <button id="new" type="submit" class="primary">New puzzle</button>
+    <details id="advanced">
+      <summary>Advanced</summary>
+      <div class="adv-grid">
+        <label>Grid size
+          <select id="size"><option value="">Auto</option></select>
+        </label>
+        <label>Word obscurity floor
+          <select id="min-score">
+            <option value="">Auto</option>
+            <option value="60">Common words only (60)</option>
+            <option value="45">Everyday (45)</option>
+            <option value="30">Broad (30)</option>
+            <option value="15">Anything goes (15)</option>
+          </select>
+        </label>
+        <label>Clue style
+          <select id="clue-tier">
+            <option value="">Auto</option>
+            <option value="1">1 · Straightforward</option>
+            <option value="2">2 · Moderate</option>
+            <option value="3">3 · Tricky</option>
+            <option value="4">4 · Devious</option>
+          </select>
+        </label>
+        <label>Seed
+          <input id="seed" type="number" min="0" placeholder="random">
+        </label>
+        <fieldset id="aids-field">
+          <legend>Solver aids</legend>
+          <label><input type="checkbox" id="aids-auto" checked> Auto</label>
+          <span id="aid-boxes"></span>
+        </fieldset>
+      </div>
+    </details>
+  </form>
+</header>
+
+<main id="app" class="app" hidden>
+  <section class="board">
+    <div class="clue-bar" id="clue-bar"><span id="cur-label"></span><span id="cur-clue"></span></div>
+    <div class="grid-wrap">
+      <div id="grid" class="grid" role="grid" aria-label="Crossword grid"></div>
+      <input id="hidden-input" class="hidden-input" type="text" autocapitalize="characters"
+             autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Type answer letters">
+    </div>
+    <div class="toolbar">
+      <span class="timer" id="timer">0:00</span>
+      <div class="menu" id="check-menu" hidden>
+        <button type="button" data-act="check-letter">Check letter</button>
+        <button type="button" data-act="check-word">Check word</button>
+        <button type="button" data-act="check-puzzle">Check puzzle</button>
+      </div>
+      <div class="menu" id="reveal-menu">
+        <button type="button" data-act="reveal-letter" data-aid="reveal_letter">Reveal letter</button>
+        <button type="button" data-act="reveal-word" data-aid="reveal_word">Reveal word</button>
+        <button type="button" data-act="reveal-puzzle" data-aid="reveal_puzzle">Reveal puzzle</button>
+      </div>
+      <button type="button" data-act="clear">Clear</button>
+      <button type="button" data-act="give-up" class="quiet">Give up</button>
+    </div>
+    <div class="meta" id="meta"></div>
+    <div class="links">
+      <a id="dl-puz" href="#">Download .puz</a>
+      <a id="dl-print" href="#" target="_blank" rel="noopener">Printable</a>
+      <a id="share" href="#">Copy share link</a>
+    </div>
+  </section>
+  <section class="clues">
+    <div><h2>Across</h2><ol id="across"></ol></div>
+    <div><h2>Down</h2><ol id="down"></ol></div>
+  </section>
+</main>
+
+<div id="status" class="status" role="status" aria-live="polite">Generating puzzle…</div>
+
+<dialog id="done">
+  <h2 id="done-title">Solved!</h2>
+  <p id="done-text"></p>
+  <form method="dialog"><button class="primary">Nice</button></form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
